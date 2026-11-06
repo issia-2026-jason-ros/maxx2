@@ -1,0 +1,12 @@
+- device_id: sample_roscore #device identifier. It is up to the designer to choose this name.
+  class_name:  embedded.mas.bridges.ros.RosMaster
+  microcontroller:
+      id: ros1 #microcontroller identifier. It is up to the designer to choose this name.
+      class_name: DefaultRos4EmbeddedMas
+      connection_string: ws://localhost:9090 #connection with ROS
+  
+  perception_topics:
+      # Specify the perception topics only topic writing actions.
+  actions:    
+    topic_writing_actions:
+      # Specify the topic writing actions
