@@ -7,9 +7,9 @@
   
   perception_topics:
       # Specify the perception topics only topic writing actions.
-      -topic_name: /arduino/ultrassonic_sensor/distance
-       topic_type: std_msgs.msg.Float32
-       percept_name: ultrassonic
-  ## actions: 
+      - topic_name: /arduino/ultrassonic_sensor/distance
+        topic_type: std_msgs.msg.Float32
+        percept_name: ultrassonic
+  actions: 
     ##  service_requesting_actions:
       
