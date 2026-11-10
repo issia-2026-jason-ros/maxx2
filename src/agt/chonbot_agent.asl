@@ -2,4 +2,4 @@
 
 
 +!walk
-   <- .print("Teste").
+   <- .move(forward).
