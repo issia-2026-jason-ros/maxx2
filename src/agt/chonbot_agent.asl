@@ -2,4 +2,4 @@
 
 
 +!walk
-   <- .print("I do not know how to satisfy this goal.").
+   <- .print("Teste").
