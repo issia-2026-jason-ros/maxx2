@@ -1,10 +1,10 @@
 !connect.
 
-
-
 +!connect <- .connectCN("skynet.chon.group",5000,"4e4a4441-9cd7-435d-a69c-02e5b9d7d3d8").
 
-+!hello[source(58c8b3e1-068f-45f9-8367-52df2c5d73d3)] <- .sendOut(58c8b3e1-068f-45f9-8367-52df2c5d73d3,askOne,status(C)).
++!hello[source(Human)] <- .sendOut(Human,tell,"Hello Human!!!").
+
+// +!hello[source(58c8b3e1-068f-45f9-8367-52df2c5d73d3)] <- .sendOut(58c8b3e1-068f-45f9-8367-52df2c5d73d3,askOne,status(C)).
 
 +!turnOff[source(Human)] <- .print("closing"); .stopMAS.
 
@@ -12,19 +12,30 @@
     .print("Server ",Server," status=",Status);
     .print("Messenger with me at http://skynet.chon.group:5000/en?ip=",Server,"&port=",Port,"&agentUUID=",ID,"&userUUID=auto&strength=achieve&message=hello").
 
-+!achieve(CMD)[source(Human)] <-
-     .sendOut(Human,tell,"Achieve recebido!!!");
-     .send(chonbot_agent,achieve,CMD).
+// Mensagem do usuario: achieve(walk)
+// sinal verde -> carrinho anda
++!achieve(walk)[source(Human)] : sinal(green) <-
+     .sendOut(Human,tell,"Walk recebido: sinal verde, andando!!!");
+     .send(chonbot_agent,achieve,walk).
 
-// Recebe o estado do sinal (red/green) e repassa ao carrinho
+// sinal vermelho ou azul -> carrinho para
++!achieve(walk)[source(Human)] : sinal(red) | sinal(blue) <-
+     .sendOut(Human,tell,"Walk recebido: sinal vermelho/azul, parado!!!");
+     .send(chonbot_agent,achieve,stop).
+
+// qualquer outra mensagem (ou sinal desconhecido) -> carrinho para
++!achieve(CMD)[source(Human)] <-
+     .sendOut(Human,tell,"Achieve recebido: parando!!!");
+     .send(chonbot_agent,achieve,stop).
+
 +!traffic_light(Color)[source(Human)] <-
      .sendOut(Human,tell,"Sinal recebido!!!");
+     -+sinal(Color);
      .send(chonbot_agent,tell,traffic_light(Color)).
 
-// O agente do semaforo (iotCommunicator) mantem a crenca status(red|green).
-// Quando ela chegar aqui (tell), traduz para traffic_light(Cor) no carrinho.
-+status(Color)[source(S)] : S \== self & (Color == red | Color == green) <-
++status(Color)[source(S)] <-
      .print("Semaforo: ", Color);
+     -+sinal(Color);
      .send(chonbot_agent,tell,traffic_light(Color)).
 
 +!unachieve(CMD)[source(Human)] <-

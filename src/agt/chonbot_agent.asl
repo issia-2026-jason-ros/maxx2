@@ -47,6 +47,11 @@
       .
 
 
++!stop
+   <- .print("Parando");
+      .brakeLight(true);
+      .move("stop").
+
 +!alert_blink : not motor_status("running")
    <- .turnSignal("alert");           //alert light on
       .wait(500);
@@ -61,8 +66,6 @@
 +distance(D)
    <- .print("Distance: ", D).
 
-// Reação imediata à mudança do sinal (o carrinho já pode estar andando)
-// Garante que só existe a crença do sinal atual
 +traffic_light(red)[source(_)]
    <- -traffic_light(green)[source(_)];
       .print("Sinal VERMELHO: parando");
