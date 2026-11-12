@@ -22,6 +22,15 @@
 
 
 
+// Sinal vermelho: para e espera ficar verde antes de continuar
++!walk : traffic_light(red)
+   <- .print("Sinal vermelho, parado");
+      .move("stop");
+      .brakeLight(true);
+      .wait(traffic_light(green));
+      .print("Sinal verde, seguindo");
+      !walk.
+
 +!walk
    <- //.turnSignal("off");
       //.brakeLight(false);
@@ -51,4 +60,18 @@
 
 +distance(D)
    <- .print("Distance: ", D).
+
+// Reação imediata à mudança do sinal (o carrinho já pode estar andando)
+// Garante que só existe a crença do sinal atual
++traffic_light(red)[source(_)]
+   <- -traffic_light(green)[source(_)];
+      .print("Sinal VERMELHO: parando");
+      .brakeLight(true);
+      .move("stop").
+
++traffic_light(green)[source(_)]
+   <- -traffic_light(red)[source(_)];
+      .print("Sinal VERDE: andando");
+      .brakeLight(false);
+      .move("forward").
 
