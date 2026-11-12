@@ -21,6 +21,12 @@
      .sendOut(Human,tell,"Sinal recebido!!!");
      .send(chonbot_agent,tell,traffic_light(Color)).
 
+// O agente do semaforo (iotCommunicator) mantem a crenca status(red|green).
+// Quando ela chegar aqui (tell), traduz para traffic_light(Cor) no carrinho.
++status(Color)[source(S)] : S \== self & (Color == red | Color == green) <-
+     .print("Semaforo: ", Color);
+     .send(chonbot_agent,tell,traffic_light(Color)).
+
 +!unachieve(CMD)[source(Human)] <-
      .sendOut(Human,tell,"UnAchieve recebido!!!");
      .send(chonbot_agent,unachieve,CMD).

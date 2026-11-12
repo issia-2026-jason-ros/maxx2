@@ -1,5 +1,5 @@
 !start.
-//!walk.           //move forward and avoid obstacles
+!walk.           //move forward and avoid obstacles
 !alert_blink.    //blink alert lights when not moving forward
 
 +!start : .my_name(Me)
@@ -17,7 +17,7 @@
       .wait(500);
       .move("right");              //move right for 2 seconds
       .wait(2000);
-      .move(stop);
+      .move("stop");
       !walk.
 
 
@@ -41,7 +41,7 @@
       .brakeLight(false);       .wait(300);
       .motorSpeed("default");   .wait(300);
       .print("Moving forward");
-      .wait(distance(D) & D <= 50);
+      .wait((distance(D) & D <= 50) | traffic_light(red)); // acorda com obstaculo OU sinal vermelho
       //.wait(2000);
       !walk;
       .

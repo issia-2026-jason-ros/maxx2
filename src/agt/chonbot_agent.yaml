@@ -43,7 +43,7 @@
         topicType: std_msgs/msg/String
         beliefName: headlight_status
 
-              # Turn signal status
+      # Turn signal status
       - topicName: /arduino/turn_signal/status
         topicType: std_msgs/msg/String
         beliefName: turn_signal_status
@@ -87,7 +87,7 @@
 
       # Motor direction
       - actionName: move
-                topicName: /arduino/motor/command
+        topicName: /arduino/motor/command
         topicType: std_msgs/msg/String
 
       # Motor speed
