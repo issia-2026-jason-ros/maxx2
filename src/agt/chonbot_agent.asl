@@ -1,11 +1,34 @@
 !start.
-!walk.           //move forward and avoid obstacles
+// !walk.        // nao anda sozinho: quem manda andar e o telefonista (achieve go)
 !alert_blink.    //blink alert lights when not moving forward
 
 +!start : .my_name(Me)
    <- //.move("forward");
       .print("Hello from ", Me).
 
+
+// =====================================================================
+// Comandos vindos do telefonista
+// =====================================================================
+
+// go: inicia o loop de walk (se ja estiver andando, nao cria outro loop)
++!go : .desire(walk)
+   <- .print("Ja estou andando").
+
++!go
+   <- !!walk.
+
+// stop: cancela o loop de walk e para o carrinho
++!stop
+   <- .drop_desire(walk);
+      .print("Parando");
+      .brakeLight(true);
+      .move("stop").
+
+
+// =====================================================================
+// Loop de walk (anda e desvia de obstaculos)
+// =====================================================================
 
 +!walk : distance(D) & D <= 50
    <- .print("Obstacle...") ;
@@ -20,37 +43,19 @@
       .move("stop");
       !walk.
 
-
-
-// Sinal vermelho: para e espera ficar verde antes de continuar
-+!walk : traffic_light(red)
-   <- .print("Sinal vermelho, parado");
-      .move("stop");
-      .brakeLight(true);
-      .wait(traffic_light(green));
-      .print("Sinal verde, seguindo");
-      !walk.
-
 +!walk
-   <- //.turnSignal("off");
-      //.brakeLight(false);
-      //.motorSpeed("default");
-      //.wait(500);
-      .move("forward");         .wait(300); //n  o aciona os motores, apesar de escrever no t  pico
+   <- .move("forward");         .wait(300); //nao aciona os motores, apesar de escrever no topico
       .turnSignal("off");       .wait(300);
       .brakeLight(false);       .wait(300);
       .motorSpeed("default");   .wait(300);
       .print("Moving forward");
-      .wait((distance(D) & D <= 50) | traffic_light(red)); // acorda com obstaculo OU sinal vermelho
-      //.wait(2000);
-      !walk;
-      .
+      .wait(distance(D) & D <= 50);   // acorda com obstaculo (o sinal vermelho/azul chega via !stop)
+      !walk.
 
 
-+!stop
-   <- .print("Parando");
-      .brakeLight(true);
-      .move("stop").
+// =====================================================================
+// Luzes de alerta
+// =====================================================================
 
 +!alert_blink : not motor_status("running")
    <- .turnSignal("alert");           //alert light on
@@ -65,16 +70,3 @@
 
 +distance(D)
    <- .print("Distance: ", D).
-
-+traffic_light(red)[source(_)]
-   <- -traffic_light(green)[source(_)];
-      .print("Sinal VERMELHO: parando");
-      .brakeLight(true);
-      .move("stop").
-
-+traffic_light(green)[source(_)]
-   <- -traffic_light(red)[source(_)];
-      .print("Sinal VERDE: andando");
-      .brakeLight(false);
-      .move("forward").
-
