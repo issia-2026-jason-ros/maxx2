@@ -93,7 +93,7 @@ intervalo_consulta(1000).   // ms entre cada consulta ao semaforo
 
 +!unachieve(CMD)[source(Human)] <-
      .sendOut(Human,tell,"UnAchieve recebido!!!");
-     .send(chonbot_agent,unachieve,CMD).
+     !enviar_carrinho(unachieve,CMD).
 
 
 // =====================================================================
@@ -103,12 +103,22 @@ intervalo_consulta(1000).   // ms entre cada consulta ao semaforo
 // =====================================================================
 +!decidir : quer_andar & sinal(green) <-
      .print("Sinal VERDE: carrinho anda");
-     .send(chonbot_agent,achieve,go).
+     !enviar_carrinho(achieve,go).
 
 +!decidir : sinal(Color) <-
      .print("Sinal ", Color, ": carrinho para");
-     .send(chonbot_agent,achieve,stop).
+     !enviar_carrinho(achieve,stop).
 
 +!decidir <-
      .print("Sem sinal conhecido: carrinho para");
-     .send(chonbot_agent,achieve,stop).
+     !enviar_carrinho(achieve,stop).
+
+
+// =====================================================================
+// ENVIO AO CARRINHO (so envia se o chonbot_agent existir)
+// =====================================================================
++!enviar_carrinho(Perf,CMD) : .all_names(L) & .member(chonbot_agent,L) <-
+     .send(chonbot_agent,Perf,CMD).
+
++!enviar_carrinho(Perf,CMD) <-
+     .print("AVISO: chonbot_agent nao existe (falhou ao iniciar? ROS/rosbridge em ws://localhost:9090 acessivel?). Comando '",CMD,"' nao enviado.").
